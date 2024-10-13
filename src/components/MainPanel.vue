@@ -49,26 +49,46 @@ export default createVuetify({
 
       <v-row>
         <v-col cols="12" sm="6">
-          <v-card v-for="(payment, index) in payments" :key="index" class="mb-4">
-            <v-card-text>
-              <v-text-field label="결제 금액" v-model.number="payment.amount" type="number" />
-              <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="payment.time" type="datetime-local" />
-              <v-select
-                label="결제자 선택"
-                v-model="payment.payer"
-                :items="people"
-              />
-              <v-select
-                label="참가자 선택"
-                v-model="payment.selectedPeople"
-                :items="people"
-                multiple
-                chips
-              />
-            </v-card-text>
-          </v-card>
-          <v-btn @click="addPayment">결제 추가</v-btn>
+          <v-btn @click="openPaymentDialog">결제 추가</v-btn>
           <v-btn @click="calculateSplit">금액 산출</v-btn>
+
+          <v-dialog v-model="isPaymentDialogOpen" max-width="500px">
+            <v-card>
+              <v-card-title>결제 추가</v-card-title>
+              <v-card-text>
+                <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" />
+                <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
+                <v-select
+                  label="결제자 선택"
+                  v-model="newPayment.payer"
+                  :items="people"
+                />
+                <v-select
+                  label="참가자 선택"
+                  v-model="newPayment.selectedPeople"
+                  :items="people"
+                  multiple
+                  chips
+                />
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" @click="addPayment">입력 완료</v-btn>
+                <v-btn @click="closePaymentDialog">취소</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12">
+          <v-list>
+            <v-list-item v-for="(payment, index) in payments" :key="index">
+              <v-list-item-content>
+                결제자: {{ payment.payer }}, 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-col>
       </v-row>
 
@@ -90,12 +110,31 @@ export default createVuetify({
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          <v-alert type="info" class="mt-4">
-            총무는 가장 많은 금액을 결제한 사람입니다. 총무는 {{ treasurer }}입니다.<br>
-            참석자들은 총무에게 자신이 부담해야 할 금액을 송금해야 합니다.<br>
-            만약 총무가 아닌 사람이 결제한 경우, 총무는 해당 결제자에게 차액을 송금해야 합니다.<br>
-            예를 들어, 결제 금액이 가장 많은 총무가 A이고, 다른 결제자인 B가 결제를 진행한 경우, A는 B에게 해당 금액만큼의 차액을 송금해야 합니다. 이렇게 하면 최종적으로 각 참석자가 자신이 부담해야 하는 금액을 명확하게 정산할 수 있습니다.
-          </v-alert>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12">
+          <v-expansion-panels>
+            <v-expansion-panel v-for="(person, index) in people" :key="index">
+              <v-expansion-panel-title>{{ person }}</v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <p>단순 산술 부담금: {{ splitCosts[person] || 0 }} 원</p>
+                <p>먼저 지불한 금액: {{ payerCosts[person] || 0 }} 원</p>
+                <p>
+                  <template v-if="splitCosts[person] < 0">
+                    총무가 {{ person }}에게 {{ Math.abs(splitCosts[person]) }} 원을 송금해야 합니다.
+                  </template>
+                  <template v-else-if="splitCosts[person] > 0">
+                    {{ person }}은 총무에게 {{ splitCosts[person] }} 원을 송금해야 합니다.
+                  </template>
+                  <template v-else>
+                    추가로 송금할 금액이 없습니다.
+                  </template>
+                </p>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </v-col>
       </v-row>
     </v-container>
@@ -108,17 +147,17 @@ export default {
     return {
       newPerson: '',
       people: [],
-      payments: [
-        {
-          amount: 0,
-          time: '',
-          payer: '',
-          selectedPeople: [],
-        },
-      ],
+      payments: [],
+      newPayment: {
+        amount: 0,
+        time: '',
+        payer: '',
+        selectedPeople: [],
+      },
       splitCosts: {},
       payerCosts: {},
       treasurer: '',
+      isPaymentDialogOpen: false,
     };
   },
   methods: {
@@ -131,13 +170,21 @@ export default {
     removePerson(index) {
       this.people.splice(index, 1);
     },
+    openPaymentDialog() {
+      this.isPaymentDialogOpen = true;
+    },
+    closePaymentDialog() {
+      this.isPaymentDialogOpen = false;
+    },
     addPayment() {
-      this.payments.push({
+      this.payments.push({ ...this.newPayment });
+      this.newPayment = {
         amount: 0,
         time: '',
         payer: '',
         selectedPeople: [],
-      });
+      };
+      this.closePaymentDialog();
     },
     calculateSplit() {
       const totalCosts = {};
