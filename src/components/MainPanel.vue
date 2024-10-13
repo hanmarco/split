@@ -29,8 +29,7 @@ export default createVuetify({
     <v-container>
       <v-row>
         <v-col cols="12" sm="6">
-          <v-text-field label="참가자 이름" v-model="newPerson" @keyup.enter="addPerson" />
-          <v-btn @click="addPerson">참가자 추가</v-btn>
+          <v-text-field label="참가자 이름" v-model="newPerson" @keyup.enter="addPerson" placeholder="ex)홍길동 철수 영희" append-inner-icon="mdi-plus-box" @click:append-inner="addPerson" />
         </v-col>
       </v-row>
 
@@ -47,8 +46,6 @@ export default createVuetify({
       <v-row>
         <v-col cols="12" sm="6">
           <v-btn @click="openPaymentDialog">결제 추가</v-btn>
-          <v-btn @click="calculateSplit">금액 산출</v-btn>
-
           <v-dialog v-model="isPaymentDialogOpen" max-width="500px">
             <v-card>
               <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
@@ -69,8 +66,8 @@ export default createVuetify({
                 />
               </v-card-text>
               <v-card-actions>
-                <v-btn color="primary" @click="isEditMode ? updatePayment() : addPayment()">입력 완료</v-btn>
                 <v-btn @click="closePaymentDialog">취소</v-btn>
+                <v-btn color="primary" @click="isEditMode ? updatePayment() : addPayment()">입력 완료</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -164,6 +161,11 @@ export default {
   },
   methods: {
     addPerson() {
+      if (this.newPerson.trim() !== '') {
+        const newPeople = this.newPerson.split(' ').map(person => person.trim()).filter(person => person !== '' && !this.people.includes(person));
+        this.people.push(...newPeople);
+        this.newPerson = '';
+      }
       if (this.newPerson.trim() !== '' && !this.people.includes(this.newPerson)) {
         this.people.push(this.newPerson);
         this.newPerson = '';
@@ -253,4 +255,7 @@ export default {
 
 <style>
 @import "vuetify/styles";
+.float-right {
+  float: right;
+}
 </style>
