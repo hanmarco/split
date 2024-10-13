@@ -36,14 +36,11 @@ export default createVuetify({
 
       <v-row>
         <v-col cols="12">
-          <v-list>
-            <v-list-item v-for="(person, index) in people" :key="index">
-              <v-list-item-content>{{ person }}</v-list-item-content>
-              <v-btn icon @click="removePerson(index)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </v-list-item>
-          </v-list>
+          <div>
+          <v-chip v-for="(person, index) in people" :key="index" closable @click:close="removePerson(index)">
+            {{ person }}
+          </v-chip>
+        </div>
         </v-col>
       </v-row>
 
@@ -54,7 +51,7 @@ export default createVuetify({
 
           <v-dialog v-model="isPaymentDialogOpen" max-width="500px">
             <v-card>
-              <v-card-title>결제 추가</v-card-title>
+              <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
               <v-card-text>
                 <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" />
                 <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
@@ -72,7 +69,7 @@ export default createVuetify({
                 />
               </v-card-text>
               <v-card-actions>
-                <v-btn color="primary" @click="addPayment">입력 완료</v-btn>
+                <v-btn color="primary" @click="isEditMode ? updatePayment() : addPayment()">입력 완료</v-btn>
                 <v-btn @click="closePaymentDialog">취소</v-btn>
               </v-card-actions>
             </v-card>
@@ -87,6 +84,9 @@ export default createVuetify({
               <v-list-item-content>
                 결제자: {{ payment.payer }}, 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
               </v-list-item-content>
+              <v-btn icon @click="editPayment(index)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
             </v-list-item>
           </v-list>
         </v-col>
@@ -158,6 +158,8 @@ export default {
       payerCosts: {},
       treasurer: '',
       isPaymentDialogOpen: false,
+      isEditMode: false,
+      editingIndex: null,
     };
   },
   methods: {
@@ -175,6 +177,8 @@ export default {
     },
     closePaymentDialog() {
       this.isPaymentDialogOpen = false;
+      this.isEditMode = false;
+      this.editingIndex = null;
     },
     addPayment() {
       this.payments.push({ ...this.newPayment });
@@ -185,6 +189,26 @@ export default {
         selectedPeople: [],
       };
       this.closePaymentDialog();
+      this.calculateSplit();
+    },
+    editPayment(index) {
+      this.editingIndex = index;
+      this.newPayment = { ...this.payments[index] };
+      this.isEditMode = true;
+      this.openPaymentDialog();
+    },
+    updatePayment() {
+      if (this.editingIndex !== null) {
+        this.payments[this.editingIndex] = { ...this.newPayment };
+        this.newPayment = {
+          amount: 0,
+          time: '',
+          payer: '',
+          selectedPeople: [],
+        };
+        this.closePaymentDialog();
+        this.calculateSplit();
+      }
     },
     calculateSplit() {
       const totalCosts = {};
