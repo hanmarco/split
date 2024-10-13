@@ -29,17 +29,23 @@ export default createVuetify({
     <v-container>
       <v-row>
         <v-col cols="12" sm="6">
-          <v-text-field label="참가자 이름" v-model="newPerson" @keyup.enter="addPerson" placeholder="ex)홍길동 철수 영희" append-inner-icon="mdi-plus-box" @click:append-inner="addPerson" />
-        </v-col>
-      </v-row>
+          <v-card class="pa-2">
+            <v-text-field label="참가자 이름" v-model="newPerson" @keyup.enter="addPerson" placeholder="ex)홍길동 철수 영희" append-inner-icon="mdi-plus" @click:append-inner="addPerson" />
+            <!-- <v-btn v-if="people.length > 0" @click="removeAllPeople" class="float-right" color="warning">Clear All</v-btn> -->
 
-      <v-row>
-        <v-col cols="12">
-          <div>
-          <v-chip v-for="(person, index) in people" :key="index" closable @click:close="removePerson(index)">
-            {{ person }}
-          </v-chip>
-        </div>
+            <v-card class="mx-auto" v-if="people.length > 0">
+              <v-toolbar color="deep-purple-accent-4" density="compact">
+                <v-btn icon="mdi-close" @click="removeAllPeople"></v-btn>
+          
+                <v-toolbar-title>모임 멤버</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-chip class="mr-1" v-for="person in people" :key="person" closable @click:close="() => removePersonByName(person)">
+                  {{ person }}
+                </v-chip>
+            </v-card-text>
+            </v-card>
+          </v-card>
         </v-col>
       </v-row>
 
@@ -166,13 +172,18 @@ export default {
         this.people.push(...newPeople);
         this.newPerson = '';
       }
-      if (this.newPerson.trim() !== '' && !this.people.includes(this.newPerson)) {
-        this.people.push(this.newPerson);
-        this.newPerson = '';
-      }
     },
     removePerson(index) {
       this.people.splice(index, 1);
+    },
+    removePersonByName(name) {
+      const index = this.people.indexOf(name);
+      if (index !== -1) {
+        this.people.splice(index, 1);
+      }
+    },
+    removeAllPeople() {
+      this.people = [];
     },
     openPaymentDialog() {
       this.isPaymentDialogOpen = true;
