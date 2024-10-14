@@ -29,7 +29,7 @@ export default createVuetify({
     <v-container>
       <v-row>
         <v-col cols="12" sm="6">
-          <v-card class="pa-2">
+          <v-card class="pa-2" elevation="16">
             <v-text-field label="참가자 이름" v-model="newPerson" @keyup.enter="addPerson" placeholder="ex)홍길동 철수 영희" append-inner-icon="mdi-plus" @click:append-inner="addPerson" />
             <!-- <v-btn v-if="people.length > 0" @click="removeAllPeople" class="float-right" color="warning">Clear All</v-btn> -->
 
@@ -49,49 +49,46 @@ export default createVuetify({
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row v-if="people.length>0">
         <v-col cols="12" sm="6">
-          <v-btn @click="openPaymentDialog">결제 추가</v-btn>
-          <v-dialog v-model="isPaymentDialogOpen" max-width="500px">
-            <v-card>
-              <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
-              <v-card-text>
-                <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" />
-                <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
-                <v-select
-                  label="결제자 선택"
-                  v-model="newPayment.payer"
-                  :items="people"
-                />
-                <v-select
-                  label="참가자 선택"
-                  v-model="newPayment.selectedPeople"
-                  :items="people"
-                  multiple
-                  chips
-                />
-              </v-card-text>
-              <v-card-actions>
-                <v-btn @click="closePaymentDialog">취소</v-btn>
-                <v-btn color="primary" @click="isEditMode ? updatePayment() : addPayment()">입력 완료</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12">
-          <v-list>
-            <v-list-item v-for="(payment, index) in payments" :key="index">
-              <v-list-item-content>
-                결제자: {{ payment.payer }}, 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
-              </v-list-item-content>
-              <v-btn icon @click="editPayment(index)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-            </v-list-item>
-          </v-list>
+          <v-card class="pa-2" elevation="16">
+            <v-btn class="ma-1 float-right" color="secondary" @click="openPaymentDialog">결제 추가</v-btn>
+            <v-dialog v-model="isPaymentDialogOpen" max-width="500px">
+              <v-card>
+                <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
+                <v-card-text>
+                  <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" />
+                  <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
+                  <v-select
+                    label="결제자 선택"
+                    v-model="newPayment.payer"
+                    :items="people"
+                  />
+                  <v-select
+                    label="참가자 선택"
+                    v-model="newPayment.selectedPeople"
+                    :items="people"
+                    multiple
+                    chips
+                  />
+                </v-card-text>
+                <v-card-actions>
+                  <v-btn @click="closePaymentDialog">취소</v-btn>
+                  <v-btn color="primary" @click="isEditMode ? updatePayment() : addPayment()">입력 완료</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            <v-list v-if="payments.length>0" class="ma-1">
+              <v-list-item v-for="(payment, index) in payments" :key="index">
+                <v-list-item-content>
+                  결제자: {{ payment.payer }}, 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
+                </v-list-item-content>
+                <v-btn icon @click="editPayment(index)">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </v-list-item>
+            </v-list>
+          </v-card>
         </v-col>
       </v-row>
 
