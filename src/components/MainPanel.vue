@@ -105,7 +105,9 @@ export default createVuetify({
       </v-row>
 
       <v-row v-if="payments.length > 0">
-        <v-col cols="12">
+        <v-btn class="ma-2" color="primary" @click="copyRenderedHtml">복사하기</v-btn>
+        <v-btn class="ma-2" color="secondary" @click="shareInfo">공유하기</v-btn>
+        <v-col cols="12" ref="contentToCopy">
           총무는 <span class="text-primary"><b>{{ treasurer }}</b></span> 입니다.
           <v-list>
             <v-list-item v-for="(cost, person) in splitCosts" :key="person">
@@ -162,6 +164,7 @@ export default createVuetify({
 export default {
   data() {
     return {
+      message: "",
       newPerson: '',
       people: [],
       payments: [],
@@ -275,6 +278,37 @@ export default {
       this.splitCosts = totalCosts;
       this.payerCosts = payerCosts;
     },
+    copyRenderedHtml() {
+      // ref를 사용하여 복사할 내용을 가져옴
+      const contentElement = this.$refs.contentToCopy?.$el || this.$refs.contentToCopy;
+      if (contentElement && contentElement instanceof Node) {
+        const range = document.createRange();
+        range.selectNodeContents(contentElement);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        try {
+          const successful = document.execCommand('copy');
+          if (successful) {
+            alert('HTML이 클립보드에 복사되었습니다.');
+          } else {
+            alert('복사에 실패했습니다.');
+          }
+        } catch (err) {
+          alert('복사 중 오류가 발생했습니다.');
+        }
+
+        // 선택 해제
+        selection.removeAllRanges();
+      } else {
+        alert('복사할 내용을 찾을 수 없습니다.');
+      }
+    },
+    shareInfo() {
+      // 공유하기 기능 구현 (예시)
+      console.log('공유하기 기능 실행');
+    }
   },
 };
 </script>
