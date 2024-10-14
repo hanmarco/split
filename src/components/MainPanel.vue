@@ -306,8 +306,20 @@ export default {
       }
     },
     shareInfo() {
-      // 공유하기 기능 구현 (예시)
-      console.log('공유하기 기능 실행');
+      this.copyRenderedHtml();
+      if (navigator.share) {
+        const shareText = `총무는 ${this.treasurer} 입니다. 송금 정보:
+${Object.entries(this.splitCosts).map(([person, cost]) => `${person}: ${cost}원`).join('\n')}`;
+        navigator.share({
+          title: '송금 정보 공유',
+          text: shareText,
+          url: window.location.href
+        })
+        .then(() => console.log('공유가 성공적으로 완료되었습니다.'))
+        .catch((error) => console.error('공유 중 오류가 발생했습니다.', error));
+      } else {
+        alert('이 브라우저는 공유 기능을 지원하지 않습니다. 클립보드에 복사된 내용을 직접 공유하세요.');
+      }
     }
   },
 };
