@@ -82,6 +82,8 @@ export default createVuetify({
             </v-dialog>
             <v-list v-if="payments.length>0" class="ma-1" variant>
               <v-list-item v-for="(payment, index) in payments" :key="index">
+                
+                <v-divider v-if="index > 0"></v-divider>
                 <v-list-item-content>
                   <v-list-item-title>{{ payment.title }}</v-list-item-title>
                   <v-list-item-subtitle>
