@@ -35,7 +35,6 @@ export default createVuetify({
 
             <v-card class="mx-auto" v-if="people.length > 0">
               <v-toolbar color="deep-purple-accent-4" density="compact">
-                
                 <v-toolbar-title>모임 멤버</v-toolbar-title>
                 <v-btn icon="mdi-close" @click="removeAllPeople"></v-btn>
               </v-toolbar>
@@ -43,7 +42,7 @@ export default createVuetify({
                 <v-chip class="mr-1" v-for="person in people" :key="person" closable @click:close="() => removePersonByName(person)">
                   {{ person }}
                 </v-chip>
-            </v-card-text>
+              </v-card-text>
             </v-card>
           </v-card>
         </v-col>
@@ -82,11 +81,19 @@ export default createVuetify({
             <v-list v-if="payments.length>0" class="ma-1">
               <v-list-item v-for="(payment, index) in payments" :key="index">
                 <v-list-item-content>
-                  모임 제목: {{ payment.title }}, 결제자: {{ payment.payer }}, 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
+                  <v-list-item-title>{{ payment.title }}</v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span class="text-primary">{{ payment.payer }}</span> 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
+                  </v-list-item-subtitle>
                 </v-list-item-content>
-                <v-btn icon @click="editPayment(index)">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
+                <template v-slot:append>
+                  <v-btn
+                    color="grey-lighten-1"
+                    icon="mdi-pencil"
+                    variant="text"
+                    @click="editPayment(index)"
+                  ></v-btn>
+                </template>
               </v-list-item>
             </v-list>
           </v-card>
