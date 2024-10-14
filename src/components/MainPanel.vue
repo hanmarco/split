@@ -57,6 +57,7 @@ export default createVuetify({
               <v-card>
                 <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
                 <v-card-text>
+                  <v-text-field label="모임 제목" v-model="newPayment.title" />
                   <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" />
                   <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
                   <v-select
@@ -81,7 +82,7 @@ export default createVuetify({
             <v-list v-if="payments.length>0" class="ma-1">
               <v-list-item v-for="(payment, index) in payments" :key="index">
                 <v-list-item-content>
-                  결제자: {{ payment.payer }}, 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
+                  모임 제목: {{ payment.title }}, 결제자: {{ payment.payer }}, 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
                 </v-list-item-content>
                 <v-btn icon @click="editPayment(index)">
                   <v-icon>mdi-pencil</v-icon>
@@ -149,6 +150,7 @@ export default {
       people: [],
       payments: [],
       newPayment: {
+        title: '',
         amount: 0,
         time: '',
         payer: '',
@@ -190,6 +192,7 @@ export default {
     addPayment() {
       this.payments.push({ ...this.newPayment });
       this.newPayment = {
+        title: '',
         amount: 0,
         time: '',
         payer: '',
@@ -208,6 +211,7 @@ export default {
       if (this.editingIndex !== null) {
         this.payments[this.editingIndex] = { ...this.newPayment };
         this.newPayment = {
+          title: '',
           amount: 0,
           time: '',
           payer: '',
