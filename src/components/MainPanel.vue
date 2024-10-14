@@ -35,9 +35,9 @@ export default createVuetify({
 
             <v-card class="mx-auto" v-if="people.length > 0">
               <v-toolbar color="deep-purple-accent-4" density="compact">
-                <v-btn icon="mdi-close" @click="removeAllPeople"></v-btn>
-          
+                
                 <v-toolbar-title>모임 멤버</v-toolbar-title>
+                <v-btn icon="mdi-close" @click="removeAllPeople"></v-btn>
               </v-toolbar>
               <v-card-text>
                 <v-chip class="mr-1" v-for="person in people" :key="person" closable @click:close="() => removePersonByName(person)">
@@ -95,7 +95,7 @@ export default createVuetify({
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row v-if="payments.length > 0">
         <v-col cols="12">
           <v-list>
             <v-list-item v-for="(cost, person) in splitCosts" :key="person">
@@ -116,7 +116,7 @@ export default createVuetify({
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row v-if="payments.length > 0">
         <v-col cols="12">
           <v-expansion-panels>
             <v-expansion-panel v-for="(person, index) in people" :key="index">
@@ -177,10 +177,7 @@ export default {
       this.people.splice(index, 1);
     },
     removePersonByName(name) {
-      const index = this.people.indexOf(name);
-      if (index !== -1) {
-        this.people.splice(index, 1);
-      }
+      this.people = this.people.filter(person => person !== name);
     },
     removeAllPeople() {
       this.people = [];
