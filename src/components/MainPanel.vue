@@ -58,8 +58,7 @@ export default createVuetify({
                 <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
                 <v-card-text>
                   <v-text-field label="모임 제목" v-model="newPayment.title" />
-                  <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" />
-                  <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
+                  <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" prefix="₩" />
                   <v-select
                     label="결제자 선택"
                     v-model="newPayment.payer"
@@ -72,6 +71,7 @@ export default createVuetify({
                     multiple
                     chips
                   />
+                  <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
                 </v-card-text>
                 <v-card-actions>
                   <v-btn @click="closePaymentDialog">취소</v-btn>
