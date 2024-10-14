@@ -57,21 +57,21 @@ export default createVuetify({
               <v-card>
                 <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
                 <v-card-text>
-                  <v-text-field label="모임 제목" v-model="newPayment.title" />
-                  <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" prefix="₩" />
+                  <v-text-field label="모임 제목" v-model="newPayment.title" prepend-icon="mdi-account-group" />
+                  <v-text-field label="결제 금액" v-model.number="newPayment.amount" type="number" prefix="₩" prepend-icon="mdi-cash" />
                   <v-select
                     label="결제자 선택"
                     v-model="newPayment.payer"
                     :items="people"
-                  />
+                    prepend-icon="mdi-account-cash" />
                   <v-select
                     label="참가자 선택"
                     v-model="newPayment.selectedPeople"
                     :items="people"
                     multiple
                     chips
-                  />
-                  <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" />
+                    prepend-icon="mdi-account-star" />
+                  <v-text-field label="시간 (예: 2024-10-13 14:00)" v-model="newPayment.time" type="datetime-local" prepend-icon="mdi-calendar-clock" />
                 </v-card-text>
                 <v-card-actions>
                   <v-btn @click="closePaymentDialog">취소</v-btn>
