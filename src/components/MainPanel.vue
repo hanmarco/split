@@ -154,7 +154,7 @@ export default {
         amount: 0,
         time: '',
         payer: '',
-        selectedPeople: [],
+        selectedPeople: this.people,
       },
       splitCosts: {},
       payerCosts: {},
@@ -182,6 +182,7 @@ export default {
       this.people = [];
     },
     openPaymentDialog() {
+      this.newPayment.selectedPeople = [...this.people];
       this.isPaymentDialogOpen = true;
     },
     closePaymentDialog() {
