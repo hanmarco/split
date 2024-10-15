@@ -76,22 +76,24 @@ export default createVuetify({
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <v-list v-if="payments.length>0" class="ma-1" variant>
-<v-list-item v-for="(payment, index) in payments" :key="index">
-              
-<v-divider v-if="index > 0"></v-divider>
+            <v-list v-if="payments.length>0" class="ma-1">
+              <v-list-item v-for="(payment, index) in payments" :key="index" @click="editPayment(index)">
+                <v-divider v-if="index > 0"></v-divider>
+                <v-list-item-title>{{ payment.title }} <small>(금액: <span  class="text-primary">{{ payment.amount }}</span> 원)</small></v-list-item-title>
                 <v-list-item-content>
-                  <v-list-item-title>{{ payment.title }}</v-list-item-title>
                   <v-list-item-subtitle>
-                    <span class="text-primary">{{ payment.payer }}</span> 금액: {{ payment.amount }} 원, 시간: {{ payment.time }}
+                    결제: <span class="text-primary">{{ payment.payer }}</span>) <span v-if="payment.selectedPeople.length>1">외에 참석자 {{payment.selectedPeople.length-1}} 명</span>
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle>
+                  <sup class="mt-2">{{ payment.time }}</sup>
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <template v-slot:append>
                   <v-btn
                     color="grey-lighten-1"
-                    icon="mdi-pencil"
+                    icon="mdi-close"
                     variant="text"
-                    @click="editPayment(index)"
+                    @click="removePayment(index)"
                   ></v-btn>
                 </template>
               </v-list-item>
@@ -272,6 +274,10 @@ export default {
         this.closePaymentDialog();
         this.calculateSplit();
       }
+    },
+    removePayment(index) {
+      this.payments.splice(index, 1);
+      this.calculateSplit();
     },
     calculateSplit() {
       const totalCosts = {};
