@@ -51,9 +51,6 @@ export default createVuetify({
       <v-row v-if="people.length>0">
         <v-col cols="12" sm="6">
           <v-card class="pa-2" elevation="16">
-
-              <v-btn block class="" color="secondary" @click="openPaymentDialog">결제 추가</v-btn>
-
             <v-dialog v-model="isPaymentDialogOpen" max-width="500px">
               <v-card>
                 <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
@@ -98,6 +95,8 @@ export default createVuetify({
                 </template>
               </v-list-item>
             </v-list>
+            
+            <v-btn block class="" color="secondary" prepend-icon="mdi-plus" @click="openPaymentDialog">결제 추가</v-btn>
           </v-card>
         </v-col>
       </v-row>
@@ -129,8 +128,8 @@ export default createVuetify({
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-            <v-btn block class="ma-2" color="primary" @click="copyRenderedHtml">복사하기</v-btn>
-            <v-btn block class="ma-2" color="secondary" @click="shareInfo">공유하기</v-btn>
+            <v-btn block color="primary" @click="copyRenderedHtml">복사하기</v-btn>
+            <v-btn block class="mt-2" color="secondary" @click="shareInfo">공유하기</v-btn>
           </v-card>
         </v-col>
       </v-row>
