@@ -156,6 +156,12 @@ export default createVuetify({
           </v-expansion-panels>
         </v-col>
       </v-row>
+      <v-snackbar
+        :timeout="2000"
+        v-model="isAlertOn"
+      >
+      {{ alertMessage }}
+    </v-snackbar>
     </v-container>
   </v-app>
 </template>
@@ -166,6 +172,8 @@ export default {
     return {
       message: "",
       newPerson: '',
+      isAlertOn: false,
+      alertMessage: "",
       people: [],
       payments: [],
       newPayment: {
@@ -291,25 +299,25 @@ export default {
         try {
           const successful = document.execCommand('copy');
           if (successful) {
-            alert('HTML이 클립보드에 복사되었습니다.');
+            this.myAlert('HTML이 클립보드에 복사되었습니다.');
           } else {
-            alert('복사에 실패했습니다.');
+            this.myAlert('복사에 실패했습니다.');
           }
         } catch (err) {
-          alert('복사 중 오류가 발생했습니다.');
+          this.myAlert('복사 중 오류가 발생했습니다.');
         }
 
         // 선택 해제
         selection.removeAllRanges();
       } else {
-        alert('복사할 내용을 찾을 수 없습니다.');
+        this.myAlert('복사할 내용을 찾을 수 없습니다.');
       }
     },
     shareInfo() {
       this.copyRenderedHtml();
       if (navigator.share) {
         const shareText = `총무는 ${this.treasurer} 입니다. 송금 정보:
-${Object.entries(this.splitCosts).map(([person, cost]) => `${person}: ${cost}원`).join('\n')}`;
+          ${Object.entries(this.splitCosts).map(([person, cost]) => `${person}: ${cost}원`).join('\n')}`;
         navigator.share({
           title: '송금 정보 공유',
           text: shareText,
@@ -318,8 +326,12 @@ ${Object.entries(this.splitCosts).map(([person, cost]) => `${person}: ${cost}원
         .then(() => console.log('공유가 성공적으로 완료되었습니다.'))
         .catch((error) => console.error('공유 중 오류가 발생했습니다.', error));
       } else {
-        alert('이 브라우저는 공유 기능을 지원하지 않습니다. 클립보드에 복사된 내용을 직접 공유하세요.');
+        this.myAlert('이 브라우저는 공유 기능을 지원하지 않습니다. 클립보드에 복사된 내용을 직접 공유하세요.');
       }
+    },
+    myAlert(message){
+      this.isAlertOn = true;
+      this.alertMessage = message;
     }
   },
 };
