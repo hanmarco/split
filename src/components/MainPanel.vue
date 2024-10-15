@@ -222,8 +222,14 @@ export default {
       this.people = [];
     },
     openPaymentDialog() {
-      this.newPayment.selectedPeople = [...this.people];
       this.isPaymentDialogOpen = true;
+      this.newPayment = {
+        title: '',
+        amount: 0,
+        time: '',
+        payer: '',
+        selectedPeople: [...this.people]
+      };
     },
     closePaymentDialog() {
       this.isPaymentDialogOpen = false;
