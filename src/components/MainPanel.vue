@@ -60,11 +60,7 @@ export default createVuetify({
                 <v-card-text>
                   <v-text-field label="모임 제목(선택)" placeholder="꼭 입력하지 않아도 됩니다" v-model="newPayment.title" prepend-icon="mdi-account-group" />
                   <v-text-field label="결제 금액(필수)" v-model.number="newPayment.amount" type="number" prefix="₩" prepend-icon="mdi-cash" />
-                  <v-select
-                    label="결제자 선택(필수)"
-                    v-model="newPayment.payer"
-                    :items="people"
-                    prepend-icon="mdi-account-cash" />
+                  <v-select label="결제자 선택(필수)" v-model="newPayment.payer" :items="people" prepend-icon="mdi-account-cash" :rules="[v => !!v || '결제자를 선택해주세요']" ref="payerSelect"/>
                   <v-select
                     label="참가자 선택"
                     v-model="newPayment.selectedPeople"
@@ -76,7 +72,7 @@ export default createVuetify({
                 </v-card-text>
                 <v-card-actions>
                   <v-btn @click="closePaymentDialog">취소</v-btn>
-                  <v-btn color="primary" @click="isEditMode ? updatePayment() : addPayment()">입력 완료</v-btn>
+                  <v-btn color="primary" @click="validateAndAddPayment">입력 완료</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -192,6 +188,21 @@ export default {
     };
   },
   methods: {
+    validateAndAddPayment() {
+      this.$refs.payerSelect.validate();
+      if (!this.newPayment.payer) {
+        return;
+      }
+      if (!this.newPayment.payer) {
+        this.myAlert('결제자를 선택해주세요.');
+        return;
+      }
+      if (this.isEditMode) {
+        this.updatePayment();
+      } else {
+        this.addPayment();
+      }
+    },
     addPerson() {
       if (this.newPerson.trim() !== '') {
         const newPeople = this.newPerson.split(' ').map(person => person.trim()).filter(person => person !== '' && !this.people.includes(person));
