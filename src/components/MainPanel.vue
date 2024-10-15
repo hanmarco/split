@@ -59,7 +59,7 @@ export default createVuetify({
                 <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
                 <v-card-text>
                   <v-text-field label="모임 제목(선택)" placeholder="꼭 입력하지 않아도 됩니다" v-model="newPayment.title" prepend-icon="mdi-account-group" />
-                  <v-text-field label="결제 금액(필수)" v-model.number="newPayment.amount" type="number" prefix="₩" prepend-icon="mdi-cash" />
+                  <v-text-field label="결제 금액(필수)" v-model.number="newPayment.amount" type="number" prefix="₩" prepend-icon="mdi-cash" :rules="[v => v > 0 || '금액은 0원이 될 수 없습니다.']" ref="amountSelect"/>
                   <v-select label="결제자 선택(필수)" v-model="newPayment.payer" :items="people" prepend-icon="mdi-account-cash" :rules="[v => !!v || '결제자를 선택해주세요']" ref="payerSelect"/>
                   <v-select
                     label="참가자 선택"
@@ -190,7 +190,9 @@ export default {
   methods: {
     validateAndAddPayment() {
       this.$refs.payerSelect.validate();
-      if (!this.newPayment.payer) {
+      this.$refs.amountSelect.validate();
+      if (this.newPayment.amount == 0) {
+        this.myAlert('금액을 입력하세요');
         return;
       }
       if (!this.newPayment.payer) {
