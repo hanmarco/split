@@ -295,7 +295,7 @@ export default {
         const selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
-
+ 
         try {
           const successful = document.execCommand('copy');
           if (successful) {
@@ -314,20 +314,24 @@ export default {
       }
     },
     shareInfo() {
+      // 클립보드에 HTML 내용을 복사
       this.copyRenderedHtml();
-      if (navigator.share) {
-        const shareText = `총무는 ${this.treasurer} 입니다. 송금 정보:
-          ${Object.entries(this.splitCosts).map(([person, cost]) => `${person}: ${cost}원`).join('\n')}`;
-        navigator.share({
-          title: '송금 정보 공유',
-          text: shareText,
-          url: window.location.href
-        })
-        .then(() => console.log('공유가 성공적으로 완료되었습니다.'))
-        .catch((error) => console.error('공유 중 오류가 발생했습니다.', error));
-      } else {
-        this.myAlert('이 브라우저는 공유 기능을 지원하지 않습니다. 클립보드에 복사된 내용을 직접 공유하세요.');
-      }
+
+      // 복사된 내용을 가져와서 공유
+      navigator.clipboard.readText().then((text) => {
+        if (navigator.share) {
+          navigator.share({
+            title: '정산내역 공유',
+            text: text,
+          })
+          .then(() => this.myAlert('복사된 내용이 성공적으로 공유되었습니다.'))
+          .catch((error) => this.myAlert(`공유 중 오류가 발생했습니다: ${error}`));
+        } else {
+          this.myAlert('공유 API를 지원하지 않는 브라우저입니다.');
+        }
+      }).catch((error) => {
+        this.myAlert(`클립보드에서 내용을 읽는 중 오류가 발생했습니다: ${error}`);
+      });
     },
     myAlert(message){
       this.isAlertOn = true;
