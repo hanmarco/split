@@ -244,7 +244,8 @@ export default {
       this.editingIndex = index;
       this.newPayment = { ...this.payments[index] };
       this.isEditMode = true;
-      this.openPaymentDialog();
+      this.isPaymentDialogOpen = true;
+      //this.openPaymentDialog();
     },
     updatePayment() {
       if (this.editingIndex !== null) {
