@@ -101,31 +101,35 @@ export default createVuetify({
       </v-row>
 
       <v-row v-if="payments.length > 0">
-        <v-btn class="ma-2" color="primary" @click="copyRenderedHtml">복사하기</v-btn>
-        <v-btn class="ma-2" color="secondary" @click="shareInfo">공유하기</v-btn>
         <v-col cols="12" ref="contentToCopy">
-          총무는 <span class="text-primary"><b>{{ treasurer }}</b></span> 입니다.
-          <v-list>
-            <v-list-item v-for="(cost, person) in splitCosts" :key="person">
-              <v-list-item-content>
-                <!-- {{ person }}: 단순 산술 부담금 {{ cost }} 원, 먼저 지불한 금액 {{ payerCosts[person] || 0 }} 원 <br> -->
-                <template v-if="cost < 0">
-                  <span v-if="person === treasurer">
-                    - 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)는 총 {{ Math.abs(cost) }} 원을 받아야됩니다
-                  </span>
-                  <span v-else>
-                    - 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)는 {{ person }}에게 {{ Math.abs(cost) }} 원을 보내야됩니다.
-                  </span>
-                </template>
-                <template v-else-if="cost > 0">
-                  - {{ person }}은 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)에게 {{ cost }} 원을 송금해야 합니다.
-                </template>
-                <template v-else>
-                  - 추가로 송금할 금액이 없습니다.
-                </template>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
+          <v-card class="pa-2" elevation="16">
+              <b class="ma-2">
+                총무는 <span class="text-primary">{{ treasurer }}</span> 입니다.
+              </b>
+            <v-list>
+              <v-list-item v-for="(cost, person) in splitCosts" :key="person">
+                <v-list-item-content>
+                  <!-- {{ person }}: 단순 산술 부담금 {{ cost }} 원, 먼저 지불한 금액 {{ payerCosts[person] || 0 }} 원 <br> -->
+                  <template v-if="cost < 0">
+                    <span v-if="person === treasurer">
+                      - 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)는 총 {{ Math.abs(cost) }} 원을 받아야됩니다
+                    </span>
+                    <span v-else>
+                      - 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)는 {{ person }}에게 {{ Math.abs(cost) }} 원을 보내야됩니다.
+                    </span>
+                  </template>
+                  <template v-else-if="cost > 0">
+                    - {{ person }}은 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)에게 {{ cost }} 원을 송금해야 합니다.
+                  </template>
+                  <template v-else>
+                    - 추가로 송금할 금액이 없습니다.
+                  </template>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-btn block class="ma-2" color="primary" @click="copyRenderedHtml">복사하기</v-btn>
+            <v-btn block class="ma-2" color="secondary" @click="shareInfo">공유하기</v-btn>
+          </v-card>
         </v-col>
       </v-row>
 
