@@ -51,7 +51,7 @@ export default createVuetify({
       <v-row v-if="people.length>0">
         <v-col cols="12" sm="6">
           <v-card class="pa-2" elevation="16">
-            <v-dialog v-model="isPaymentDialogOpen" max-width="500px">
+            <v-dialog v-model="isPaymentDialogOpen" max-width="500px" persistent>
               <v-card>
                 <v-card-title>{{ isEditMode ? '결제 수정' : '결제 추가' }}</v-card-title>
                 <v-card-text>
