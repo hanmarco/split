@@ -104,13 +104,18 @@ export default createVuetify({
       <v-row v-if="payments.length > 0">
         <v-col cols="12" ref="contentToCopy">
           <v-card class="pa-2" elevation="16">
-              <b class="ma-2">
+            <v-card-title>
+
+              <!-- <b class="ma-2">
+              </b> -->
                 총무는 <span class="text-primary">{{ treasurer }}</span> 입니다.
-              </b>
+                <v-btn class="float-right" color="primary" @click="copyRenderedHtml" icon="mdi-clipboard-text-multiple-outline" size="x-small"></v-btn>
+                <v-btn class="float-right mr-2" color="secondary" @click="shareInfo" icon="mdi-share" size="x-small"></v-btn>
+            </v-card-title>
             <v-list>
               <v-list-item v-for="(cost, person) in splitCosts" :key="person">
                 <v-list-item-content>
-                  <v-btn variant="text" color="primary">{{person}}</v-btn>
+                  <strong class="text-primary text-bold">{{person}}: </strong>
                   <!-- {{ person }}: 단순 산술 부담금 {{ cost }} 원, 먼저 지불한 금액 {{ payerCosts[person] || 0 }} 원 <br> -->
                   <template v-if="cost < 0">
                     <span v-if="person === treasurer">
@@ -129,8 +134,6 @@ export default createVuetify({
                 </v-list-item-content>
               </v-list-item>
             </v-list>
-            <v-btn block color="primary" @click="copyRenderedHtml">복사하기</v-btn>
-            <v-btn block class="mt-2" color="secondary" @click="shareInfo">공유하기</v-btn>
           </v-card>
         </v-col>
       </v-row>
