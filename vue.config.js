@@ -5,7 +5,13 @@ module.exports = defineConfig({
     name: 'Split',
     workboxOptions: {
       navigateFallback: '/split/index.html',
-    }
+    },
+    manifestOptions: {
+      start_url: '/split/',
+      scope: '/split/',
+      display: 'standalone',
+      background_color: '#ffffff'
+    },
   },
   transpileDependencies: true,
   pluginOptions: {
