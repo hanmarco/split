@@ -114,9 +114,8 @@ export default createVuetify({
             </v-card-title>
             <v-list>
               <v-list-item v-for="(cost, person) in splitCosts" :key="person">
-                <v-list-item-content>
+                <v-list-item-title>
                   <strong class="text-primary text-bold">{{person}}: </strong>
-                  <!-- {{ person }}: 단순 산술 부담금 {{ cost }} 원, 먼저 지불한 금액 {{ payerCosts[person] || 0 }} 원 <br> -->
                   <template v-if="cost < 0">
                     <span v-if="person === treasurer">
                       총 {{ Math.abs(cost) }} 원을 받아야됩니다
@@ -131,7 +130,15 @@ export default createVuetify({
                   <template v-else>
                     추가로 송금할 금액이 없습니다.
                   </template>
-                </v-list-item-content>
+                </v-list-item-title>
+                <v-list-item-subtitle class="font-weight-thin">
+                  <span>
+                    (할당금: {{totalCosts[person]}})
+                  </span>
+                  <span v-if="payerCosts[person]">
+                    (이미 낸 돈: {{payerCosts[person]}})
+                  </span>
+                </v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-card>
@@ -175,6 +182,7 @@ export default createVuetify({
 export default {
   data() {
     return {
+      totalCosts: {},
       message: "",
       newPerson: '',
       isAlertOn: false,
@@ -314,6 +322,9 @@ export default {
           payerCosts[payment.payer] += payment.amount;
         }
       });
+
+      // interim settlement
+      this.totalCosts = { ...totalCosts }
 
       // Adjust costs based on payer's payments
       Object.keys(payerCosts).forEach(payer => {
