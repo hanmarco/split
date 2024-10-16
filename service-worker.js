@@ -4,9 +4,7 @@ self.addEventListener('install', function(event) {
             return cache.addAll([
                 '/split/', // 시작 URL을 서브 디렉토리에 맞게 수정
                 '/split/index.html',
-                '/split/styles.css',
-                '/split/app.js',
-                '/split/icon.png'
+                '/split/favicon.ico'
             ]);
         })
     );
