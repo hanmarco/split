@@ -110,20 +110,21 @@ export default createVuetify({
             <v-list>
               <v-list-item v-for="(cost, person) in splitCosts" :key="person">
                 <v-list-item-content>
+                  <v-btn variant="text" color="primary">{{person}}</v-btn>
                   <!-- {{ person }}: 단순 산술 부담금 {{ cost }} 원, 먼저 지불한 금액 {{ payerCosts[person] || 0 }} 원 <br> -->
                   <template v-if="cost < 0">
                     <span v-if="person === treasurer">
-                      - 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)는 총 {{ Math.abs(cost) }} 원을 받아야됩니다
+                      총 {{ Math.abs(cost) }} 원을 받아야됩니다
                     </span>
                     <span v-else>
-                      - 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)는 {{ person }}에게 {{ Math.abs(cost) }} 원을 보내야됩니다.
+                      {{ person }}에게 {{ Math.abs(cost) }} 원을 보내야됩니다.
                     </span>
                   </template>
                   <template v-else-if="cost > 0">
-                    - {{ person }}은 총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)에게 {{ cost }} 원을 송금해야 합니다.
+                    총무(<span class="text-primary"><b>{{ treasurer }}</b></span>)에게 {{ cost }} 원을 송금해야 합니다.
                   </template>
                   <template v-else>
-                    - 추가로 송금할 금액이 없습니다.
+                    추가로 송금할 금액이 없습니다.
                   </template>
                 </v-list-item-content>
               </v-list-item>
@@ -136,7 +137,7 @@ export default createVuetify({
 
       <v-row v-if="payments.length > 0">
         <v-col cols="12">
-          <v-expansion-panels>
+          <v-expansion-panels v-model="details" multiple>
             <v-expansion-panel v-for="(person, index) in people" :key="index">
               <v-expansion-panel-title>{{ person }}</v-expansion-panel-title>
               <v-expansion-panel-text>
@@ -153,7 +154,7 @@ export default createVuetify({
                   </template>
                 </p>
               </v-expansion-panel-text>
-            </v-expansion-panel>
+          </v-expansion-panel> 
           </v-expansion-panels>
         </v-col>
       </v-row>
@@ -175,6 +176,7 @@ export default {
       newPerson: '',
       isAlertOn: false,
       alertMessage: "",
+      details: [],
       people: [],
       payments: [],
       newPayment: {
