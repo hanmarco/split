@@ -1,0 +1,16 @@
+{
+    "name": "Split",
+    "short_name": "Split",
+    "theme_color": "#fcd328",
+    "background_color": "#FFFFFF",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/split/",
+    "icons": [
+      {
+        "src": "favicon.ico",
+        "sizes": "192x192",
+        "type": "image/ico"
+      }
+    ]
+  }
