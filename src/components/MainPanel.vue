@@ -225,12 +225,14 @@ export default {
       this.payments.forEach(payment => {
         payment.selectedPeople = payment.selectedPeople.filter(selectedPerson => this.people.includes(selectedPerson));
       });
+      this.calculateSplit();
     },
     removeAllPeople() {
       this.people = [];
       this.payments.forEach(payment => {
         payment.selectedPeople = [];
       });
+      this.calculateSplit();
     },
     openPaymentDialog() {
       this.isPaymentDialogOpen = true;
