@@ -222,9 +222,15 @@ export default {
     },
     removePersonByName(name) {
       this.people = this.people.filter(person => person !== name);
+      this.payments.forEach(payment => {
+        payment.selectedPeople = payment.selectedPeople.filter(selectedPerson => this.people.includes(selectedPerson));
+      });
     },
     removeAllPeople() {
       this.people = [];
+      this.payments.forEach(payment => {
+        payment.selectedPeople = [];
+      });
     },
     openPaymentDialog() {
       this.isPaymentDialogOpen = true;
