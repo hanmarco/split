@@ -227,13 +227,14 @@ export default {
       this.payments.forEach(payment => {
         payment.selectedPeople = payment.selectedPeople.filter(selectedPerson => this.people.includes(selectedPerson));
       });
+      if (this.people.length === 0) {
+        this.payments = [];
+      }
       this.calculateSplit();
     },
     removeAllPeople() {
       this.people = [];
-      this.payments.forEach(payment => {
-        payment.selectedPeople = [];
-      });
+      this.payments = [];
       this.calculateSplit();
     },
     openPaymentDialog() {
