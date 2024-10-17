@@ -74,7 +74,7 @@ export default createVuetify({
               </v-card>
             </v-dialog>
             <v-list v-if="payments.length>0" class="ma-1">
-              <v-list-item v-for="(payment, index) in payments" :key="index" @click="editPayment(index)">
+              <v-list-item v-for="(payment, index) in sortedPayments" :key="index" @click="editPayment(index)">
                 <v-divider v-if="index > 0"></v-divider>
                 <v-list-item-title>{{ payment.title }} <small>(금액: <span  class="text-primary">{{ payment.amount }}</span> 원)</small></v-list-item-title>
                 <v-list-item-content>
@@ -105,7 +105,7 @@ export default createVuetify({
         <v-col cols="12" ref="contentToCopy">
           <v-card class="pa-2" elevation="16">
             <v-list>
-              <v-list-item  v-for="(payment, index) in payments" :key="index">
+              <v-list-item  v-for="(payment, index) in sortedPayments" :key="index">
                 <b>{{index+1}}</b>. {{ payment.title }}에서 {{payment.payer}}님
                 <span v-if="payment.selectedPeople.length-1>0">
                   외에 {{payment.selectedPeople.length-1}} 명
@@ -195,7 +195,12 @@ export default {
       return this.payments.reduce((acc, payment) => {
         return acc + payment.amount;
       }, 0);
-  }
+    },
+    sortedPayments() {
+      return this.payments.slice().sort((a, b) => {
+        return new Date(a.time) - new Date(b.time);
+      });
+    }
   },
   data() {
     return {
