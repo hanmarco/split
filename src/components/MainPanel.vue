@@ -104,14 +104,24 @@ export default createVuetify({
       <v-row v-if="payments.length > 0">
         <v-col cols="12" ref="contentToCopy">
           <v-card class="pa-2" elevation="16">
+            <v-list>
+              <v-list-item  v-for="(payment, index) in payments" :key="index">
+                <b>{{index+1}}</b>. {{ payment.title }}에서 {{payment.payer}}님
+                <span v-if="payment.selectedPeople.length-1>0">
+                  외에 {{payment.selectedPeople.length-1}} 명
+                </span>
+                이 {{ payment.amount }}원 사용
+              </v-list-item >
+              <v-list-item>
+                <strong>총 금액 {{totalAmount}}원</strong>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
             <v-card-title>
-
-              <!-- <b class="ma-2">
-              </b> -->
-                총무는 <span class="text-primary">{{ treasurer }}</span> 입니다.
+              총무는 <span class="text-primary">{{ treasurer }}</span> 입니다.
+            </v-card-title>
                 <v-btn class="float-right" color="primary" @click="copyRenderedHtml" icon="mdi-clipboard-text-multiple-outline" size="x-small"></v-btn>
                 <v-btn class="float-right mr-2" color="secondary" @click="shareInfo" icon="mdi-share" size="x-small"></v-btn>
-            </v-card-title>
             <v-list>
               <v-list-item v-for="(cost, person) in splitCosts" :key="person">
                 <v-list-item-title>
@@ -180,6 +190,13 @@ export default createVuetify({
 
 <script>
 export default {
+  computed: {
+    totalAmount() {
+      return this.payments.reduce((acc, payment) => {
+        return acc + payment.amount;
+      }, 0);
+  }
+  },
   data() {
     return {
       totalCosts: {},
