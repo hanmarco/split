@@ -131,7 +131,7 @@ export default createVuetify({
                       총 {{ Math.abs(cost) }} 원을 받아야됩니다
                     </span>
                     <span v-else>
-                      {{ person }}에게 {{ Math.abs(cost) }} 원을 보내야됩니다.
+                      총무(<span class="text-warning"><b>{{ treasurer }}</b></span>)한테 {{ Math.abs(cost) }} 원을 받아야됩니다.
                     </span>
                   </template>
                   <template v-else-if="cost > 0">
@@ -170,7 +170,7 @@ export default createVuetify({
                     {{ person }}은 총무에게 {{ splitCosts[person] }} 원을 송금해야 합니다.
                   </template>
                   <template v-else>
-                    추가로 송금할 금액이 없습니다.
+                    추가로 송금할 금액이 없습니다. 
                   </template>
                 </p>
               </v-expansion-panel-text>
